@@ -288,9 +288,6 @@ function hideDeleteModal() {
 document.addEventListener('DOMContentLoaded', function() {
   const dropdownArrow = document.querySelector('.dropdown-arrow');
   const wordDropdown = document.getElementById('word-dropdown');
-  
-  console.log('Dropdown arrow:', dropdownArrow);
-  console.log('Word dropdown:', wordDropdown);
 
   function toggleDropdown() {
     console.log('Toggle dropdown clicked');
