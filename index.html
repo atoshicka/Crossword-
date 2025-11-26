@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>crossword</title>
+  </head>
+
+  <template id="word-list">
+    <table class="word-list">
+      <thead>
+        <tr>
+          <th>Слово</th>
+          <th>Описание</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </template>
+
+  <template id="table-row">
+    <tr>
+      <td class="word">%word</td>
+      <td>%description</td>
+      <td class="remove">×</td>
+    </tr>
+  </template>
+
+  <template id="add-form">
+    <form class="add-word">
+      <input type="text" name="word" />
+      <input type="text" name="description" />
+      <input type="button" value="+" />
+    </form>
+  </template>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

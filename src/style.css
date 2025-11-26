@@ -1,0 +1,196 @@
+.word-list {
+  td, th {
+    font-size: 24px;
+    padding: 4px 8px;
+  }
+  th:first-child {
+    width: 200px;
+  }
+  th:nth-child(2) {
+    width: 400px;
+  }
+  th {
+    text-align: left;
+    background-color: #d8dee9;
+  }
+  td {
+    padding: 4px 8px;
+  }
+  tr:nth-child(even) td {
+    background-color: #d8dee9;
+  }
+
+  td.remove {
+    cursor: pointer;
+    &:hover {
+      background-color: #bf616a;
+    }
+  }
+}
+
+.add-word {
+  input {
+    font-size: 24px;
+  }
+  input[name='word'] {
+    width: 200px;
+  }
+  input[name='description'] {
+    width: 400px;
+  }
+}
+
+.tight-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 50px);
+  grid-template-rows: repeat(10, 50px);
+  gap: 0;
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.grid-item {
+  width: 50px;
+  height: 50px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.modal-content input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.direction-select {
+  margin-bottom: 20px;
+}
+
+.direction-select label {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.direction-select input {
+  margin-right: 8px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.word-input-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+#grid-word {
+  width: 100%;
+  padding: 8px 35px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 12px;
+  top: 38%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  user-select: none;
+}
+
+.word-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.word-dropdown.show {
+  display: block !important;
+}
+
+.dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+ .crossword-container {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .words-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .words-list li {
+    padding: 2px 0;
+  }
