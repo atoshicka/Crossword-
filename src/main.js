@@ -428,13 +428,6 @@ window.addEventListener('click', (e) => {
   }
 });
 
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    hideModal();
-    hideDeleteModal();
-  }
-});
-
 async function downloadPDF() {
   try {
     await loadHtml2Pdf();
