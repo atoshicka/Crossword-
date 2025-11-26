@@ -191,9 +191,6 @@ function canPlaceWord(word, direction, startIndex) {
     } else {
       cellIndex = (row + i) * 10 + col;
     }
-    
-    const cell = gridItems[cellIndex];
-    const currentLetter = cell.textContent;
   }
   
   return true;
