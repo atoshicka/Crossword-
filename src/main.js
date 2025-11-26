@@ -290,13 +290,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const wordDropdown = document.getElementById('word-dropdown');
 
   function toggleDropdown() {
-    console.log('Toggle dropdown clicked');
     wordDropdown.classList.toggle('show');
   }
   if (dropdownArrow) {
     dropdownArrow.addEventListener('click', function(e) {
       e.stopPropagation();
-      console.log('Arrow clicked');
       toggleDropdown();
     });
   }
