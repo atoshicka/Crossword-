@@ -21,6 +21,7 @@ const loadHtml2Pdf = () => {
   });
 };
 
+const grid_size = 10;
 
 // Эту часть можно делать через обычные querySelector-ы
 const { first } = elementMethods();
@@ -127,10 +128,9 @@ formEl.addEventListener('click', (e) => {
   }
 });
 
-// Создание сетки
 root.first('#app .grid-container').innerHTML = `
-  <div class="tight-grid">
-    ${Array.from({length: 100}, (_, i) => 
+  <div class="tight-grid" style="grid-template-columns: repeat(${grid_size}, 1fr);">
+    ${Array.from({length: grid_size * grid_size}, (_, i) => 
       `<div class="grid-item" data-index="${i}"></div>`
     ).join('')}
   </div>
@@ -149,6 +149,8 @@ const crosswordWordsList = document.getElementById('crossword-words-list');
 
 const gridWords = [];
 
+const gridLetters = Array(grid_size * grid_size).fill(null).map(() => []); //массив для хранения букв от разных слов в каждой ячейке
+
 // Обновление списка слов кроссворда
 function updateCrosswordWordsList() {
   if (gridWords.length === 0) {
@@ -165,20 +167,18 @@ function updateCrosswordWordsList() {
   crosswordWordsList.innerHTML = html;
 }
 
-
 function canPlaceWord(word, direction, startIndex) {
   const gridItems = document.querySelectorAll('.grid-item');
-  const row = Math.floor(startIndex / 10);
-  const col = startIndex % 10;
+  const row = Math.floor(startIndex / grid_size);
+  const col = startIndex % grid_size;
 
   // Проверка, чтобы слово вмещалось в сетку
-
   if (direction === 'horizontal') {
-    if (col + word.length > 10) {
+    if (col + word.length > grid_size) {
       return false;
     }
   } else {
-    if (row + word.length > 10) {
+    if (row + word.length > grid_size) {
       return false;
     }
   }
@@ -187,9 +187,9 @@ function canPlaceWord(word, direction, startIndex) {
     let cellIndex;
     
     if (direction === 'horizontal') {
-      cellIndex = row * 10 + (col + i);
+      cellIndex = row * grid_size + (col + i);
     } else {
-      cellIndex = (row + i) * 10 + col;
+      cellIndex = (row + i) * grid_size + col;
     }
   }
   
@@ -215,16 +215,16 @@ function updateOkButtonState() {
 function findWordByCell(cellIndex) {
   for (const wordData of gridWords) {
     const { word, direction, startIndex } = wordData;
-    const row = Math.floor(startIndex / 10);
-    const col = startIndex % 10;
+    const row = Math.floor(startIndex / grid_size);
+    const col = startIndex % grid_size;
 
     for (let i = 0; i < word.length; i++) {
       let currentCellIndex;
       
       if (direction === 'horizontal') {
-        currentCellIndex = row * 10 + (col + i);
+        currentCellIndex = row * grid_size + (col + i);
       } else {
-        currentCellIndex = (row + i) * 10 + col;
+        currentCellIndex = (row + i) * grid_size + col;
       }
       
       if (currentCellIndex === cellIndex) {
@@ -235,34 +235,44 @@ function findWordByCell(cellIndex) {
   return null;
 }
 
-// Удаление слова из сетки
+function updateCellDisplay(cellIndex) {
+  const gridItems = document.querySelectorAll('.grid-item');
+  const letters = gridLetters[cellIndex];
+  
+  if (letters.length > 0) {
+    gridItems[cellIndex].textContent = letters[letters.length - 1];
+  } else {
+    gridItems[cellIndex].textContent = '';
+  }
+}
 
 function removeWordFromGrid(wordData) {
-  const { word, direction, startIndex } = wordData;
+  const { word, direction, startIndex, id} = wordData;
   const gridItems = document.querySelectorAll('.grid-item');
-  const row = Math.floor(startIndex / 10);
-  const col = startIndex % 10;
+  const row = Math.floor(startIndex / grid_size);
+  const col = startIndex % grid_size;
 
   // Удаление букв слова в сетке
-
   for (let i = 0; i < word.length; i++) {
     let cellIndex;
     
     if (direction === 'horizontal') {
-      cellIndex = row * 10 + (col + i);
+      cellIndex = row * grid_size + (col + i);
     } else {
-      cellIndex = (row + i) * 10 + col;
+      cellIndex = (row + i) * grid_size + col;
     }
     
-    if (cellIndex < 100 && gridItems[cellIndex]) {
-      gridItems[cellIndex].textContent = '';
+    if (cellIndex < grid_size * grid_size) {
+      const letterIndex = gridLetters[cellIndex].indexOf(word[i]);
+      if (letterIndex !== -1) {
+        gridLetters[cellIndex].splice(letterIndex, 1);
+      }
+      updateCellDisplay(cellIndex);
     }
-    
   }
 
 // Удаление слова из хранилища
-
-  const wordIndex = gridWords.indexOf(wordData);
+  const wordIndex = gridWords.findIndex(w => w.id === id);
   if (wordIndex !== -1) {
     gridWords.splice(wordIndex, 1);
   }
@@ -270,7 +280,6 @@ function removeWordFromGrid(wordData) {
 }
 
 // Окно удаления слова
-
 function showDeleteModal(wordData) {
   deleteWordInfo.textContent = `Слово: "${wordData.word}" (${wordData.direction === 'horizontal' ? 'по горизонтали' : 'по вертикали'})`;
   deleteModal.style.display = 'block';
@@ -279,7 +288,6 @@ function showDeleteModal(wordData) {
 }
 
 // Скрытие окна удаления
-
 function hideDeleteModal() {
   deleteModal.style.display = 'none';
   deleteModal.currentWordData = null;
@@ -380,7 +388,6 @@ modalOk.addEventListener('click', () => {
 modalCancel.addEventListener('click', hideModal);
 
 // Обработчики для окна удаления
-
 deleteConfirm.addEventListener('click', () => {
   if (deleteModal.currentWordData) {
     removeWordFromGrid(deleteModal.currentWordData);
@@ -392,28 +399,32 @@ deleteCancel.addEventListener('click', hideDeleteModal);
 
 function addWordToGrid(word, direction, startIndex) {
   const gridItems = document.querySelectorAll('.grid-item');
-  const row = Math.floor(startIndex / 10);
-  const col = startIndex % 10;
+  const row = Math.floor(startIndex / grid_size);
+  const col = startIndex % grid_size;
+   const wordId = Date.now() + Math.random();
 
-// Информация о слове
-
-  gridWords.push({
+// Информация о слове c id
+const wordData = {
     word,
     direction,
-    startIndex
-  });
+    startIndex,
+    id: wordId
+  };
+
+  gridWords.push(wordData);
 
   for (let i = 0; i < word.length; i++) {
     let cellIndex;
     
     if (direction === 'horizontal') {
-      cellIndex = row * 10 + (col + i);
+      cellIndex = row * grid_size + (col + i);
     } else {
-      cellIndex = (row + i) * 10 + col;
+      cellIndex = (row + i) * grid_size + col;
     }
     
-    if (cellIndex < 100 && gridItems[cellIndex]) {
-      gridItems[cellIndex].textContent = word[i];
+    if (cellIndex < grid_size * grid_size) {
+      gridLetters[cellIndex].push(word[i]);
+      updateCellDisplay(cellIndex);
     }
   }
   updateCrosswordWordsList();
